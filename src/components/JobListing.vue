@@ -1,9 +1,23 @@
 <script setup>
-import { defineProps } from "vue";
+import { defineProps, ref, computed } from "vue";
 
-defineProps({
-    job: Object,
-})
+const props = defineProps({
+	job: Object,
+});
+
+const showFullDescription = ref(false);
+
+const triuncatedDescription = computed(() => {
+	let description = props.job.description;
+	if (description.length > 90 && !showFullDescription.value) {
+		description = description.substring(0, 90) + "...";
+	}
+	return description;
+});
+
+const toggleFullDescription = () => {
+	showFullDescription.value = !showFullDescription.value;
+};
 </script>
 
 <template>
@@ -15,16 +29,24 @@ defineProps({
 			</div>
 
 			<div class="mb-5">
-                {{ job.description }}
+				<div>
+					{{ triuncatedDescription }}
+				</div>
+				<button
+					@click="toggleFullDescription"
+					class="text-green-500 hover:text-green-600 mb-5"
+				>
+					{{ showFullDescription ? "Show Less" : "Show More" }}
+				</button>
 			</div>
 
 			<h3 class="text-green-500 mb-2">{{ job.salary }} / Year</h3>
 
-			<div class="border border-gray-100 mb-5"></div>
+			<div class="border border-gray-90 mb-5"></div>
 
 			<div class="flex flex-col lg:flex-row justify-between mb-4">
 				<div class="text-orange-700 mb-3">
-					<i class="fa-solid fa-location-dot text-lg"></i>
+					<i class="pi pi-map-marker text-organge-700"></i>
 					{{ job.location }}
 				</div>
 				<a
